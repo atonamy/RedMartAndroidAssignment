@@ -371,7 +371,7 @@ public class RedMartService {
     public static class ImageLoaderTask implements TaskExecutor.Task {
 
         private final static int IMAGE_MAX_PREVIEW_SIZE = 400;
-        private final static int IMAGE_MAX_SIZE = 1000;
+        private final static int IMAGE_MAX_SIZE = 900;
 
         private ImageSetter imageSetter;
         private String imageUrl;

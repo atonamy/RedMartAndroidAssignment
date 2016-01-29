@@ -8,6 +8,7 @@
     <string name="product_unit_title">Unit</string>
     <string name="product_price_title">Price</string>
     <string name="title_activity_product_details"></string>
+    <string name="catalog_currency">SGD</string>
     <integer name="page_size">20</integer>
     <integer name="highlight_product_title_horizontal_proportion">25</integer>
     <integer name="highlight_product_title_vertical_proportion">25</integer>

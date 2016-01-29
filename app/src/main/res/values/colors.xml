@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#EE4054</color>
+    <color name="colorMeasure">#D3D3D3</color>
+    <color name="productItemBackground">#FFFFFF</color>
+    <color name="productItemPreviewTitle">#000000</color>
+</resources>

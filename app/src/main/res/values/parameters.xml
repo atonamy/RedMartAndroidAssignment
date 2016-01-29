@@ -9,8 +9,8 @@
     <string name="product_price_title">Price</string>
     <string name="title_activity_product_details"></string>
     <integer name="page_size">40</integer>
-    <integer name="highlight_product_title_horizontal_proportion">40</integer>
-    <integer name="highlight_product_title_vertical_proportion">30</integer>
+    <integer name="highlight_product_title_horizontal_proportion">25</integer>
+    <integer name="highlight_product_title_vertical_proportion">25</integer>
     <integer name="highlight_product_title_alpha">165</integer>
     <integer name="product_details_slideshow_delay_in_sec">5</integer>
 </resources>

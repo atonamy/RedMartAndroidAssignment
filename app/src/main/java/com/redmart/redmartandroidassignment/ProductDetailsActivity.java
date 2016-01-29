@@ -170,10 +170,10 @@ public class ProductDetailsActivity extends AppCompatActivity implements RedMart
     protected Bitmap DrawTitleHighlight(Bitmap image) {
         Bitmap result = image.copy(Bitmap.Config.ARGB_8888, true);
         Canvas canvas = new Canvas(result);
-        int percent = canvas.getHeight()/100;
+        float percent = (float)canvas.getHeight()/100.0f;
         int height = (canvas.getWidth() > canvas.getHeight()) ?
-                percent*getResources().getInteger(R.integer.highlight_product_title_horizontal_proportion)
-                : percent*getResources().getInteger(R.integer.highlight_product_title_vertical_proportion);
+                Math.round(percent*(float)getResources().getInteger(R.integer.highlight_product_title_horizontal_proportion))
+                : Math.round(percent*(float)getResources().getInteger(R.integer.highlight_product_title_vertical_proportion));
         Paint paint = new Paint();
         paint.setColor(Color.WHITE);
         paint.setStyle(Paint.Style.FILL);

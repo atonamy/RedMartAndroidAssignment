@@ -1,3 +1,6 @@
 # RedMartAndroidAssignment
 
-Unit tests is not yet implemented, the rest is there.
+For latest bug fixes please review "smooth" branch.
+
+
+

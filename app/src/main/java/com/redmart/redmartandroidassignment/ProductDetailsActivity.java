@@ -126,13 +126,13 @@ public class ProductDetailsActivity extends AppCompatActivity implements RedMart
     public void onProductDetailsResponse(RedMartService.ProductDetails product_details) {
         DecimalFormat currency = new DecimalFormat("0.00");
         progressWheel.setVisibility(View.GONE);
-        collapsingToolbar.setTitle(product_details.productInfo.getProductTitle());
-        productDescription.setText(product_details.productInfo.getProductTitle() + "\n" + product_details.productDescription.replaceAll("��"," "));
-        productMeasure.setText(product_details.productInfo.getProductMeasure());
-        productPrice.setText(currency.format(product_details.productInfo.getNormalPrice()) + " SGD");
-        if(product_details.productInfo.getPromoPrice() > 0 && product_details.productInfo.getPromoPrice() < product_details.productInfo.getNormalPrice())
+        collapsingToolbar.setTitle(product_details.productInfo.productTitle);
+        productDescription.setText(product_details.productInfo.productTitle + "\n" + product_details.productDescription.replaceAll("��"," "));
+        productMeasure.setText(product_details.productInfo.productMeasure);
+        productPrice.setText(currency.format(product_details.productInfo.normalPrice) + " SGD");
+        if(product_details.productInfo.promoPrice > 0 && product_details.productInfo.promoPrice < product_details.productInfo.normalPrice)
         {
-            productPromoPrice.setText(currency.format(product_details.productInfo.getPromoPrice()) + " SGD");
+            productPromoPrice.setText(currency.format(product_details.productInfo.promoPrice) + " SGD");
             productPrice.setPaintFlags(productPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
         detailContent.setVisibility(View.VISIBLE);

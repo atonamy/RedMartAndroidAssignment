@@ -2,7 +2,6 @@ package com.redmart.redmartandroidassignment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -16,33 +15,36 @@ import android.widget.TextView;
 import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import io.realm.RealmList;
 
 /**
  * Created by archie on 27/1/16.
  */
 public class RedMartCatalogRecyclerViewAdapter extends RecyclerView.Adapter<RedMartCatalogRecyclerViewAdapter.CatalogViewHolder> {
 
+    private static final int MAX_BUFFER = 300;
+
     private Context currentContext;
-    RealmList<ProductItem> productList;
+    List<RedMartService.ProductItem> productList;
     private Integer wheelIndex;
     private int progressAdded;
 
-    public RedMartCatalogRecyclerViewAdapter(Context context, ProductItem[] product_list) {
+    public RedMartCatalogRecyclerViewAdapter(Context context, RedMartService.ProductItem[] product_list) {
         currentContext = context;
         wheelIndex = null;
-        productList = new RealmList<ProductItem>();
+        productList = new ArrayList<>();
         progressAdded = 0;
         populateCatalog(product_list);
+
     }
 
-    public void populateCatalog(ProductItem[] product_list) {
+    public void populateCatalog(RedMartService.ProductItem[] product_list) {
         Add(product_list);
     }
 
@@ -108,7 +110,7 @@ public class RedMartCatalogRecyclerViewAdapter extends RecyclerView.Adapter<RedM
             viewHolder.progressWheel.setVisibility(View.GONE);
         }
 
-        ProductItem product = getItem(i);
+        RedMartService.ProductItem product = getItem(i);
         populateProductLayout(product, viewHolder.productImage1, viewHolder.productTitle1,
                 viewHolder.productMeasure1, viewHolder.productPrice1, viewHolder.productPromoPrice1);
         ProductItemClick product_click = new ProductItemClick(product.getProductId());
@@ -125,26 +127,26 @@ public class RedMartCatalogRecyclerViewAdapter extends RecyclerView.Adapter<RedM
 
     }
 
-    protected void populateProductLayout(ProductItem product,
+    protected void populateProductLayout(RedMartService.ProductItem product,
                                          ImageView product_image, TextView product_title, TextView product_measure,
                                          TextView product_price, TextView product_promo_price) {
         DecimalFormat currency = new DecimalFormat("0.00");
         product_image.setImageDrawable(ResourcesService.getDrawable(product_image.getContext(), R.mipmap.ic_launcher));
         if(product.getImage() != null)
-            product_image.setImageBitmap(BitmapFactory.decodeByteArray(product.getImage(), 0, product.getImage().length));
-        product_title.setText(adjustTitle(product.getProductTitle()));
-        product_measure.setText(product.getProductMeasure());
-        product_price.setText("S$"+currency.format(product.getNormalPrice()));
+            product_image.setImageBitmap(product.getImage());
+        product_title.setText(adjustTitle(product.productTitle));
+        product_measure.setText(product.productMeasure);
+        product_price.setText("S$"+currency.format(product.normalPrice));
         product_promo_price.setText("");
         product_price.setPaintFlags(product_price.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
-        if(product.getPromoPrice() > 0 && product.getPromoPrice() < product.getNormalPrice()){
-            product_promo_price.setText("S$" + currency.format(product.getPromoPrice()));
+        if(product.promoPrice > 0 && product.promoPrice < product.normalPrice){
+            product_promo_price.setText("S$" + currency.format(product.promoPrice));
             product_price.setPaintFlags(product_price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
     }
 
 
-    public ProductItem getItem(int position) {
+    public RedMartService.ProductItem getItem(int position) {
         return productList.get(position);
 
     }
@@ -168,8 +170,10 @@ public class RedMartCatalogRecyclerViewAdapter extends RecyclerView.Adapter<RedM
         return (((productList.size()%2) == 0) ? size : size+1)+progressAdded;
     }
 
-    protected void Add(ProductItem[] products) {
-        List<ProductItem> temp = Arrays.asList(products);
+    protected void Add(RedMartService.ProductItem[] products) {
+        if(productList.size() > MAX_BUFFER)
+            productList.subList(0, MAX_BUFFER-MAX_BUFFER/3).clear();
+        List<RedMartService.ProductItem> temp = Arrays.asList(products);
         Collections.shuffle(temp); //just for fun
         productList.addAll(temp);
     }
@@ -180,7 +184,7 @@ public class RedMartCatalogRecyclerViewAdapter extends RecyclerView.Adapter<RedM
             notifyDataSetChanged();
     }
 
-    public void addProducts(ProductItem[] products) {
+    public void addProducts(RedMartService.ProductItem[] products) {
         Add(products);
         notifyDataSetChanged();
     }

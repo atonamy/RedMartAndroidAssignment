@@ -27,9 +27,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fadeScrollbars="true"
-            android:overScrollMode="never"
             >
-
+            <!-- android:overScrollMode="never" -->
         </android.support.v7.widget.RecyclerView>
 
 

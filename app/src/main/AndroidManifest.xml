@@ -24,8 +24,7 @@
         <activity
             android:name=".ProductDetailsActivity"
             android:label="@string/title_activity_product_details"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleTop"></activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

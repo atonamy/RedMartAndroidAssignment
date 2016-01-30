@@ -17,7 +17,6 @@ import com.pnikosis.materialishprogress.ProgressWheel;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
@@ -34,6 +33,7 @@ public class RedMartCatalogRecyclerViewAdapter extends RecyclerView.Adapter<RedM
     List<RedMartService.ProductItem> productList;
     private Integer wheelIndex;
     private int progressAdded;
+    //private boolean no_more;
 
     public RedMartCatalogRecyclerViewAdapter(Context context, RedMartService.ProductItem[] product_list) {
         currentContext = context;
@@ -41,6 +41,7 @@ public class RedMartCatalogRecyclerViewAdapter extends RecyclerView.Adapter<RedM
         productList = new ArrayList<>();
         progressAdded = 0;
         populateCatalog(product_list);
+        //no_more = false;
 
     }
 
@@ -171,10 +172,8 @@ public class RedMartCatalogRecyclerViewAdapter extends RecyclerView.Adapter<RedM
     }
 
     protected void Add(RedMartService.ProductItem[] products) {
-        if(productList.size() > MAX_BUFFER)
-            productList.subList(0, MAX_BUFFER-MAX_BUFFER/3).clear();
         List<RedMartService.ProductItem> temp = Arrays.asList(products);
-        Collections.shuffle(temp); //just for fun
+        //Collections.shuffle(temp); //just for fun
         productList.addAll(temp);
     }
 
@@ -184,11 +183,19 @@ public class RedMartCatalogRecyclerViewAdapter extends RecyclerView.Adapter<RedM
             notifyDataSetChanged();
     }
 
-    public void addProducts(RedMartService.ProductItem[] products) {
+    public int addProducts(RedMartService.ProductItem[] products) {
         Add(products);
         notifyDataSetChanged();
+        return productList.size();
     }
 
+    public void checkIfNeedToClear() {
+        if(productList.size() > MAX_BUFFER) {
+            int last_position = (MAX_BUFFER - MAX_BUFFER / 3);
+            productList.subList(0, last_position).clear();
+            notifyItemRangeRemoved(0, (last_position/2));
+        }
+    }
 
     public void removeLoader(boolean update) {
         progressAdded = 0;
@@ -208,6 +215,7 @@ public class RedMartCatalogRecyclerViewAdapter extends RecyclerView.Adapter<RedM
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(currentContext, ProductDetailsActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             intent.putExtra("ProductId", productId);
             currentContext.startActivity(intent);
         }

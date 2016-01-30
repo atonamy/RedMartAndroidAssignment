@@ -97,6 +97,8 @@ public class CatalogActivity extends AppCompatActivity implements RedMartService
                     int total_item_count = mainCatalog.getLayoutManager().getItemCount();
                     int past_visibles_item1s = ((LinearLayoutManager)mainCatalog.getLayoutManager()).findFirstVisibleItemPosition();
 
+                    catalogAdapter.checkIfNeedToClear();
+
                     if (catalogLoading)
                     {
                         if ( (visible_item_count + past_visibles_item1s+PAGIGNATION_PREFIX) >= total_item_count)
@@ -109,6 +111,8 @@ public class CatalogActivity extends AppCompatActivity implements RedMartService
                             else
                                 Toast.makeText(CatalogActivity.this, CatalogActivity.this.getResources().getString(R.string.no_connection),
                                         Toast.LENGTH_LONG).show();
+
+                            catalogAdapter.notifyItemRangeChanged(0, catalogAdapter.getItemCount());
                         }
                     }
                 }
@@ -140,9 +144,8 @@ public class CatalogActivity extends AppCompatActivity implements RedMartService
         if(catalogAdapter == null) {
             catalogAdapter = new RedMartCatalogRecyclerViewAdapter(this, product_list);
             mainCatalog.setAdapter(catalogAdapter);
-        }else {
+        }else
             catalogAdapter.addProducts(product_list);
-        }
         if(currentPage == 0)
             startIntroAnimation();
     }

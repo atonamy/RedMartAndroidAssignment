@@ -134,7 +134,7 @@ public class RedMartCatalogRecyclerViewAdapter extends RecyclerView.Adapter<RedM
             product_image.setImageBitmap(BitmapFactory.decodeByteArray(product.getImage(), 0, product.getImage().length));
         product_title.setText(adjustTitle(product.getProductTitle()));
         product_measure.setText(product.getProductMeasure());
-        product_price.setText("S$"+currency.format(product.getNormalPrice()));
+        product_price.setText(currentContext.getResources().getString(R.string.catalog_currency_prefix)+currency.format(product.getNormalPrice()));
         product_promo_price.setText("");
         product_price.setPaintFlags(product_price.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
         if(product.getPromoPrice() > 0 && product.getPromoPrice() < product.getNormalPrice()){
@@ -204,6 +204,7 @@ public class RedMartCatalogRecyclerViewAdapter extends RecyclerView.Adapter<RedM
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(currentContext, ProductDetailsActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             intent.putExtra("ProductId", productId);
             currentContext.startActivity(intent);
         }

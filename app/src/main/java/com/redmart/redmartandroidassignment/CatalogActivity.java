@@ -22,6 +22,7 @@ public class CatalogActivity extends AppCompatActivity implements RedMartService
     @Bind(R.id.progress_wheel) ProgressWheel progressWheel;
     @Bind(R.id.activity_main_swipe_refresh_catalog) SwipeRefreshLayout swipeRefreshCatalog;
     @Bind(R.id.activity_main_catalog) RecyclerView mainCatalog;
+    @Bind(R.id.toolbar) Toolbar mainToolbar;
 
     private RedMartService redMartService;
     private boolean catalogLoading;
@@ -34,8 +35,8 @@ public class CatalogActivity extends AppCompatActivity implements RedMartService
         setContentView(R.layout.activity_catalog);
         ButterKnife.bind(this);
         mainCatalog.setLayoutManager(new LinearLayoutManager(this,  LinearLayoutManager.VERTICAL, false)); // require instantiate here otherwise application will crash (android bug due to android:scrollbars="vertical")
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        VolleyManager.init(getApplicationContext());
+        setSupportActionBar(mainToolbar);
         initUI();
         initDefaults();
     }

@@ -32,15 +32,13 @@ public  class RedMartService {
     private final static String IMAGE_PREFIX = "http://media.redmart.com/newmedia/200p";
     private final static String PRODUCT_LIST_API = API_PREFIX + "/catalog/search";
     private final static String PRODUCT_DETAILS_API = API_PREFIX + "/catalog/products";
-    private final static int IMAGE_MAX_PREVIEW_SIZE = 600;
-    private final static int IMAGE_MAX_SIZE = 1000;
 
     private Context currentContext;
     private ProductListResult productListResult;
     private ProductDetailsResult productDetailsResult;
     private TaskExecutor mainExecutor;
     private boolean stopped;
-    private static RequestQueue volleyQueue = null;
+    private static RequestQueue volleyQueue = VolleyManager.getVolleyQueue();
 
     public interface Result {
         public void onResult();
@@ -333,7 +331,10 @@ public  class RedMartService {
         }
     }
 
-    private class ImageLoaderTask implements TaskExecutor.Task {
+    public static class ImageLoaderTask implements TaskExecutor.Task {
+
+        private final static int IMAGE_MAX_PREVIEW_SIZE = 600;
+        private final static int IMAGE_MAX_SIZE = 1000;
 
         private ImageSetter imageSetter;
         private String imageUrl;

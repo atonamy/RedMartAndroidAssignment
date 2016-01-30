@@ -21,6 +21,9 @@ import android.widget.Toast;
 import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.text.DecimalFormat;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -44,8 +47,10 @@ public class ProductDetailsActivity extends AppCompatActivity implements RedMart
     @Bind(R.id.detail_content)
     CoordinatorLayout detailContent;
 
-
+    private Set<Bitmap> allocatedBitmaps;
     private RedMartService redMartService;
+    private Handler currentSlideshow;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,11 +87,18 @@ public class ProductDetailsActivity extends AppCompatActivity implements RedMart
     @Override
     public void onDestroy() {
         super.onDestroy();
+        currentSlideshow.removeCallbacksAndMessages(null);
         redMartService.close();
+        Iterator<Bitmap> i = allocatedBitmaps.iterator();
+        while(i.hasNext())
+            i.next().recycle();
+        allocatedBitmaps.clear();
     }
 
     protected void initDefaults() {
         redMartService = new RedMartService(getApplicationContext());
+        allocatedBitmaps = new HashSet<>();
+        currentSlideshow = new Handler();
     }
 
     protected void initUI() {
@@ -110,7 +122,6 @@ public class ProductDetailsActivity extends AppCompatActivity implements RedMart
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int itemId = item.getItemId();
         switch (itemId) {
             case android.R.id.home:
@@ -118,7 +129,6 @@ public class ProductDetailsActivity extends AppCompatActivity implements RedMart
                 break;
 
         }
-
         return true;
     }
 
@@ -129,10 +139,12 @@ public class ProductDetailsActivity extends AppCompatActivity implements RedMart
         collapsingToolbar.setTitle(product_details.productInfo.getProductTitle());
         productDescription.setText(product_details.productInfo.getProductTitle() + "\n" + product_details.productDescription.replaceAll("��"," "));
         productMeasure.setText(product_details.productInfo.getProductMeasure());
-        productPrice.setText(currency.format(product_details.productInfo.getNormalPrice()) + " SGD");
+        productPrice.setText(currency.format(product_details.productInfo.getNormalPrice()) + " " +
+                getResources().getString(R.string.catalog_currency));
         if(product_details.productInfo.getPromoPrice() > 0 && product_details.productInfo.getPromoPrice() < product_details.productInfo.getNormalPrice())
         {
-            productPromoPrice.setText(currency.format(product_details.productInfo.getPromoPrice()) + " SGD");
+            productPromoPrice.setText(currency.format(product_details.productInfo.getPromoPrice()) + " " +
+                    getResources().getString(R.string.catalog_currency));
             productPrice.setPaintFlags(productPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
         detailContent.setVisibility(View.VISIBLE);
@@ -154,17 +166,27 @@ public class ProductDetailsActivity extends AppCompatActivity implements RedMart
             return;
         }
 
-        productImage.setImageBitmap(DrawTitleHighlight(images[index]));
+        Bitmap new_image = null;
+        if(allocatedBitmaps.contains(images[index]))
+            new_image = images[index];
+        else {
+            new_image = DrawTitleHighlight(images[index]);
+            images[index].recycle();
+            images[index] = new_image;
+            allocatedBitmaps.add(new_image);
+        }
+
+        productImage.setImageBitmap(new_image);
         productImage.setAlpha(0.0f);
         productImage.animate().alpha(1.0f);
 
         if(images.length > 1)
-            (new Handler()).postDelayed(new Runnable() {
+            currentSlideshow.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     SlideShow(images, index+1);
                 }
-            }, getResources().getInteger(R.integer.product_details_slideshow_delay_in_sec)*1000);
+            }, getResources().getInteger(R.integer.product_details_slideshow_delay_in_sec) * 1000);
     }
 
     protected Bitmap DrawTitleHighlight(Bitmap image) {

@@ -13,4 +13,6 @@
     <integer name="highlight_product_title_vertical_proportion">25</integer>
     <integer name="highlight_product_title_alpha">165</integer>
     <integer name="product_details_slideshow_delay_in_sec">5</integer>
+    <string name="catalog_currency">SGD</string>
+    <string name="catalog_currency_prefix">S$</string>
 </resources>

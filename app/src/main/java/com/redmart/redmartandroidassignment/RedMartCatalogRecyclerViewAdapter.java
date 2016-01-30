@@ -138,7 +138,7 @@ public class RedMartCatalogRecyclerViewAdapter extends RecyclerView.Adapter<RedM
         product_promo_price.setText("");
         product_price.setPaintFlags(product_price.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
         if(product.getPromoPrice() > 0 && product.getPromoPrice() < product.getNormalPrice()){
-            product_promo_price.setText("S$" + currency.format(product.getPromoPrice()));
+            product_promo_price.setText(currentContext.getResources().getString(R.string.catalog_currency_prefix)+currency.format(product.getPromoPrice()));
             product_price.setPaintFlags(product_price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
     }

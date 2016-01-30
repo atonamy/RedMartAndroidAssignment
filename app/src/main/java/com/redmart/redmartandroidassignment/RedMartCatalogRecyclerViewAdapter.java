@@ -30,7 +30,7 @@ import io.realm.RealmList;
 public class RedMartCatalogRecyclerViewAdapter extends RecyclerView.Adapter<RedMartCatalogRecyclerViewAdapter.CatalogViewHolder> {
 
     private Context currentContext;
-    RealmList<ProductItem> productList;
+    List<ProductItem> productList;
     private Integer wheelIndex;
     private int progressAdded;
 

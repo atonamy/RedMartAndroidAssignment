@@ -137,11 +137,11 @@ public class RedMartCatalogRecyclerViewAdapter extends RecyclerView.Adapter<RedM
             product_image.setImageBitmap(product.getImage());
         product_title.setText(adjustTitle(product.productTitle));
         product_measure.setText(product.productMeasure);
-        product_price.setText(currentContext.getResources().getString(R.string.catalog_currency)+currency.format(product.normalPrice));
+        product_price.setText(currentContext.getResources().getString(R.string.catalog_currency_prefix)+currency.format(product.normalPrice));
         product_promo_price.setText("");
         product_price.setPaintFlags(product_price.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
         if(product.promoPrice > 0 && product.promoPrice < product.normalPrice){
-            product_promo_price.setText(currentContext.getResources().getString(R.string.catalog_currency)+currency.format(product.promoPrice));
+            product_promo_price.setText(currentContext.getResources().getString(R.string.catalog_currency_prefix)+currency.format(product.promoPrice));
             product_price.setPaintFlags(product_price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
     }

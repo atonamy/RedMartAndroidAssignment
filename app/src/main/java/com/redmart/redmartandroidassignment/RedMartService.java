@@ -142,11 +142,13 @@ public  class RedMartService {
 
     protected ProductItem createProductItem(JSONObject product) throws JSONException {
         ProductItem product_item = new ProductItem();
+        String product_image_url = IMAGE_PREFIX + product.getJSONObject("img").getString("name");
         product_item.setProductId(product.getLong("id"));
         product_item.setProductTitle(product.getString("title"));
         product_item.setProductMeasure(product.getJSONObject("measure").getString("wt_or_vol"));
         product_item.setNormalPrice((Double)product.getJSONObject("pricing").getDouble("price"));
         product_item.setPromoPrice((Double)product.getJSONObject("pricing").getDouble("promo_price"));
+        product_item.setImagreUrl(product_image_url);
         return product_item;
     }
 
@@ -154,12 +156,11 @@ public  class RedMartService {
         List<ProductItem> product_list = new LinkedList<ProductItem>();
         for(int i = 0; i < products.length() && !stopped; i++) {
             JSONObject product = products.getJSONObject(i);
-            String product_image_url = IMAGE_PREFIX + product.getJSONObject("img").getString("name");
             ProductItem product_item = createProductItem(product);
             product_list.add(product_item);
-            ImageLoaderTask image_loader = new ImageLoaderTask(product_image_url, product_item, Bitmap.CompressFormat.JPEG);
+            /*ImageLoaderTask image_loader = new ImageLoaderTask(product_item.getImagreUrl(), product_item, Bitmap.CompressFormat.JPEG);
             if(!stopped)
-                mainExecutor.execute(image_loader);
+                mainExecutor.execute(image_loader);*/
         }
 
         populateProductListResult(product_list);

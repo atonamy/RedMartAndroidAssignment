@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
 
 public class CatalogActivity extends AppCompatActivity implements RedMartService.ProductListResult {
 
-    private static int PAGIGNATION_PREFIX = 6;
+    private static int PAGIGNATION_PREFIX = 4;
 
     @Bind(R.id.progress_wheel) ProgressWheel progressWheel;
     @Bind(R.id.activity_main_swipe_refresh_catalog) SwipeRefreshLayout swipeRefreshCatalog;
@@ -137,7 +137,7 @@ public class CatalogActivity extends AppCompatActivity implements RedMartService
 
         swipeRefreshCatalog.setRefreshing(false);
         if(catalogAdapter == null) {
-            catalogAdapter = new RedMartCatalogRecyclerViewAdapter(this, product_list);
+            catalogAdapter = new RedMartCatalogRecyclerViewAdapter(this, product_list, (LinearLayoutManager)mainCatalog.getLayoutManager());
             mainCatalog.setAdapter(catalogAdapter);
         }else {
             catalogAdapter.addProducts(product_list);

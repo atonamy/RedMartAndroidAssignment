@@ -15,4 +15,7 @@
     <integer name="product_details_slideshow_delay_in_sec">5</integer>
     <string name="catalog_currency">SGD</string>
     <string name="catalog_currency_prefix">S$</string>
+
+    <integer name="product_image_task">0</integer>
+    <integer name="product_image_thread">1</integer>
 </resources>

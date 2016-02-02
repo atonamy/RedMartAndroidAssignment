@@ -90,7 +90,7 @@ public class CatalogActivity extends AppCompatActivity implements RedMartService
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy)
             {
-                if(dy > 0) //check for scroll down
+                if(dy > 0 && catalogAdapter != null) //check for scroll down
                 {
                     int visible_item_count = mainCatalog.getLayoutManager().getChildCount();
                     int total_item_count = mainCatalog.getLayoutManager().getItemCount();

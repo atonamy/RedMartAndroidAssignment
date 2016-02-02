@@ -60,11 +60,9 @@ public class CatalogActivity extends AppCompatActivity implements RedMartService
             Toast.makeText(this, getResources().getString(R.string.no_connection),
                     Toast.LENGTH_LONG).show();
         }
-
     }
 
     protected void initUI() {
-
         progressWheel.setCircleRadius(progressWheel.getLayoutParams().width);
         progressWheel.setVisibility(View.INVISIBLE);
         mainCatalog.setVerticalScrollBarEnabled(true);
@@ -91,7 +89,7 @@ public class CatalogActivity extends AppCompatActivity implements RedMartService
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy)
             {
-                if(dy > 0) //check for scroll down
+                if(dy > 0 && catalogAdapter != null) //check for scroll down
                 {
                     int visible_item_count = mainCatalog.getLayoutManager().getChildCount();
                     int total_item_count = mainCatalog.getLayoutManager().getItemCount();

@@ -33,7 +33,7 @@ public class RedMartCatalogRecyclerViewAdapter extends RecyclerView.Adapter<RedM
     List<RedMartService.ProductItem> productList;
     private Integer wheelIndex;
     private int progressAdded;
-    //private boolean no_more;
+    private final int updatedRange;
 
     public RedMartCatalogRecyclerViewAdapter(Context context, RedMartService.ProductItem[] product_list) {
         currentContext = context;
@@ -41,12 +41,12 @@ public class RedMartCatalogRecyclerViewAdapter extends RecyclerView.Adapter<RedM
         productList = new ArrayList<>();
         progressAdded = 0;
         populateCatalog(product_list);
-        //no_more = false;
-
+        updatedRange = currentContext.getResources().getInteger(R.integer.page_size)/2;
     }
 
     public void populateCatalog(RedMartService.ProductItem[] product_list) {
-        Add(product_list);
+        if(product_list != null)
+            Add(product_list);
     }
 
     public class CatalogViewHolder extends RecyclerView.ViewHolder {
@@ -180,13 +180,19 @@ public class RedMartCatalogRecyclerViewAdapter extends RecyclerView.Adapter<RedM
     public void addLoader(boolean update) {
         progressAdded = 1;
         if(update)
-            notifyDataSetChanged();
+            notifyItemRangeChanged(getItemCount()-1, getItemCount());
     }
 
-    public int addProducts(RedMartService.ProductItem[] products) {
-        Add(products);
-        notifyDataSetChanged();
-        return productList.size();
+    public void addProducts(RedMartService.ProductItem[] products) {
+        populateCatalog(products);
+        notifyItemRangeChanged(getItemCount()-updatedRange, getItemCount());
+    }
+
+
+    public void removeLoader(boolean update) {
+        progressAdded = 0;
+        if(update)
+            notifyItemRangeChanged(getItemCount()-1, getItemCount());
     }
 
     public void checkIfNeedToClear() {
@@ -196,13 +202,6 @@ public class RedMartCatalogRecyclerViewAdapter extends RecyclerView.Adapter<RedM
             notifyItemRangeRemoved(0, (last_position/2));
         }
     }
-
-    public void removeLoader(boolean update) {
-        progressAdded = 0;
-        if(update)
-            notifyDataSetChanged();
-    }
-
 
     private class ProductItemClick implements View.OnClickListener {
 

@@ -111,8 +111,6 @@ public class CatalogActivity extends AppCompatActivity implements RedMartService
                             else
                                 Toast.makeText(CatalogActivity.this, CatalogActivity.this.getResources().getString(R.string.no_connection),
                                         Toast.LENGTH_LONG).show();
-
-                            catalogAdapter.notifyItemRangeChanged(0, catalogAdapter.getItemCount());
                         }
                     }
                 }

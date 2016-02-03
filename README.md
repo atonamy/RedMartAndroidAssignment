@@ -5,7 +5,7 @@ Please review two branches:
 * Smooth - use classic implementation 
 
 
-This is assignment demonstrate:
+This assignment is demonstrate:
 
 1. Android coding standards and good code design
 2. Custom views implementation

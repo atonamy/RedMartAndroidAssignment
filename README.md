@@ -14,7 +14,6 @@ This is assignment demonstrate:
 5. Integration with Volley and ButterKnife libraries 
 
 
-![Alt text](https://cloud.githubusercontent.com/assets/5222190/12772079/13ee11fe-ca69-11e5-9997-fd16250c29f9.png "")
+![Alt text](https://cloud.githubusercontent.com/assets/5222190/12772288/ee47045e-ca6a-11e5-9aa8-ae87b24fb503.png "")
 
-
-![Alt text](https://cloud.githubusercontent.com/assets/5222190/12772090/25225020-ca69-11e5-960d-4ca7006b8bbd.png "")
+![Alt text](https://cloud.githubusercontent.com/assets/5222190/12772291/f27f1ec6-ca6a-11e5-9397-691c107e72ec.png "")

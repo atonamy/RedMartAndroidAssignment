@@ -103,7 +103,7 @@ public class CatalogActivity extends AppCompatActivity implements RedMartService
                             catalogLoading = false;
                             if(RedMartService.isOnline(CatalogActivity.this)) {
                                 catalogAdapter.addLoader(true);
-                                loadCatalog(currentPage++);
+                                loadCatalog(++currentPage);
                             }
                             else
                                 Toast.makeText(CatalogActivity.this, CatalogActivity.this.getResources().getString(R.string.no_connection),

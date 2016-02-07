@@ -424,6 +424,8 @@ public class RedMartService {
                     else
                         isComplete = true;
                 }
+                else
+                    isComplete = true;
             }
             else
                 isComplete = true;

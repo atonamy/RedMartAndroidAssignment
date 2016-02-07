@@ -16,6 +16,10 @@ public class VolleyManager {
             volleyQueue =  Volley.newRequestQueue(context);
     }
 
+    public static boolean isInitialized() {
+        return (volleyQueue != null);
+    }
+
     public static RequestQueue getVolleyQueue() {
         return volleyQueue;
     }

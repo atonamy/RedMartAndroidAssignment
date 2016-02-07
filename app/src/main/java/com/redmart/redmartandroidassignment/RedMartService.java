@@ -188,7 +188,7 @@ public  class RedMartService {
         JSONArray images = product.getJSONArray("images");
         for(int i = 0; i < images.length(); i++) {
             String product_image_url = IMAGE_PREFIX + images.getJSONObject(i).getString("name");
-            ImageLoaderTask image_loader = new ImageLoaderTask(product_image_url, product_details, Bitmap.CompressFormat.PNG);
+            ImageLoaderTask image_loader = new ImageLoaderTask(currentContext, product_image_url, product_details, Bitmap.CompressFormat.PNG);
             if (!stopped)
                 mainExecutor.execute(image_loader);
             else
@@ -244,8 +244,6 @@ public  class RedMartService {
             });
     }
 
-
-
     private class ContentLoaderTask implements TaskExecutor.Task {
 
         private String jsonUrl;
@@ -263,8 +261,18 @@ public  class RedMartService {
         @Override
         public void run() {
             JsonObjectRequest json_request =  new JsonObjectRequest(jsonUrl, null, successJsonResponse, errorResponse);
-            if(!stopped)
-                volleyQueue.add(json_request);
+            if(!stopped) {
+                if(VolleyManager.isInitialized())
+                    VolleyManager.getVolleyQueue().add(json_request);
+                else if(currentContext != null) {
+                    VolleyManager.init(currentContext);
+                    VolleyManager.getVolleyQueue().add(json_request);
+                }
+                else
+                    isComplete = true;
+            }
+            else
+                isComplete = true;
         }
 
         private Response.Listener<JSONObject> successJsonResponse =  new Response.Listener<JSONObject>() {
@@ -334,21 +342,23 @@ public  class RedMartService {
 
     public static class ImageLoaderTask implements TaskExecutor.Task {
 
-        private final static int IMAGE_MAX_PREVIEW_SIZE = 600;
-        private final static int IMAGE_MAX_SIZE = 1000;
+        private final static int IMAGE_MAX_PREVIEW_SIZE = 400;
+        private final static int IMAGE_MAX_SIZE = 900;
 
         private ImageSetter imageSetter;
         private String imageUrl;
         private boolean isComplete;
         private boolean stopped;
-        Bitmap.CompressFormat imageQuality;
+        private Bitmap.CompressFormat imageQuality;
+        private Context currentContext;
 
-        public ImageLoaderTask(String image_url, ImageSetter image_setter, Bitmap.CompressFormat quality) {
+        public ImageLoaderTask(Context context, String image_url, ImageSetter image_setter, Bitmap.CompressFormat quality) {
             this.imageSetter = image_setter;
             this.imageUrl = image_url;
             this.isComplete = false;
             this.stopped = false;
             this.imageQuality = quality;
+            this.currentContext = context;
         }
 
         @Override
@@ -359,16 +369,28 @@ public  class RedMartService {
                     ImageRequest image_request = null;
                     if(this.imageQuality ==  Bitmap.CompressFormat.JPEG)
                         image_request = new ImageRequest(imageUrl, successImageResponse, IMAGE_MAX_PREVIEW_SIZE, IMAGE_MAX_PREVIEW_SIZE,
-                            ImageView.ScaleType.CENTER, Bitmap.Config.RGB_565, errorResponse);
+                                ImageView.ScaleType.CENTER, Bitmap.Config.RGB_565, errorResponse);
                     else if(this.imageQuality == Bitmap.CompressFormat.PNG)
                         image_request = new ImageRequest(imageUrl, successImageResponse, IMAGE_MAX_SIZE, IMAGE_MAX_SIZE,
                                 ImageView.ScaleType.CENTER, Bitmap.Config.RGB_565, errorResponse);
-                    if(!stopped && image_request != null)
-                        volleyQueue.add(image_request);
+                    if(!stopped && image_request != null) {
+                        if(VolleyManager.isInitialized())
+                            VolleyManager.getVolleyQueue().add(image_request);
+                        else if(currentContext != null) {
+                            VolleyManager.init(currentContext);
+                            VolleyManager.getVolleyQueue().add(image_request);
+                        }
+                        else
+                            isComplete = true;
+                    }
                     else
                         isComplete = true;
                 }
+                else
+                    isComplete = true;
             }
+            else
+                isComplete = true;
         }
 
 
@@ -401,7 +423,6 @@ public  class RedMartService {
                 image.compress(Bitmap.CompressFormat.PNG, 95, stream);
             return stream.toByteArray();
         }
-
 
         @Override
         public boolean isDone() {

@@ -164,7 +164,7 @@ public class RedMartCatalogRecyclerViewAdapter extends RecyclerView.Adapter<RedM
         }
 
         product_image.setImageDrawable(null);
-        RedMartService.ImageLoaderTask image_loader = new RedMartService.ImageLoaderTask(url, new RedMartService.ImageSetter() {
+        RedMartService.ImageLoaderTask image_loader = new RedMartService.ImageLoaderTask(currentContext, url, new RedMartService.ImageSetter() {
             @Override
             public void setImage(byte[] image) {
                 if (layoutManager != null && position >= layoutManager.findFirstVisibleItemPosition() && position <= layoutManager.findLastVisibleItemPosition()) {

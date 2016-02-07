@@ -13,7 +13,11 @@ public class VolleyManager {
 
     public static void init(Context context) {
         if(volleyQueue == null)
-            volleyQueue =  Volley.newRequestQueue(context);
+            volleyQueue = Volley.newRequestQueue(context);
+    }
+
+    public static boolean isInitialized() {
+        return (volleyQueue != null);
     }
 
     public static RequestQueue getVolleyQueue() {

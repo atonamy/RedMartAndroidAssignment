@@ -190,7 +190,7 @@ public class RedMartService {
                 product.getJSONObject("measure").getString("wt_or_vol"), (Double)product.getJSONObject("pricing").getDouble("price"),
                     (Double)product.getJSONObject("pricing").getDouble("promo_price"), product_image_url);
             product_list.add(product_item);
-            ImageLoaderTask image_loader = new ImageLoaderTask(product_image_url, product_item, Bitmap.CompressFormat.JPEG);
+            ImageLoaderTask image_loader = new ImageLoaderTask(currentContext, product_image_url, product_item, Bitmap.CompressFormat.JPEG);
             if(!stopped)
                 mainExecutor.execute(image_loader);
         }
@@ -224,7 +224,7 @@ public class RedMartService {
         JSONArray images = product.getJSONArray("images");
         for(int i = 0; i < images.length(); i++) {
             product_image_url = IMAGE_PREFIX + images.getJSONObject(i).getString("name");
-            ImageLoaderTask image_loader = new ImageLoaderTask(product_image_url, product_details, Bitmap.CompressFormat.PNG);
+            ImageLoaderTask image_loader = new ImageLoaderTask(currentContext, product_image_url, product_details, Bitmap.CompressFormat.PNG);
             if (!stopped)
                 mainExecutor.execute(image_loader);
             else
@@ -299,8 +299,18 @@ public class RedMartService {
         @Override
         public void run() {
             JsonObjectRequest json_request =  new JsonObjectRequest(jsonUrl, null, successJsonResponse, errorResponse);
-            if(!stopped)
-                VolleyManager.getVolleyQueue().add(json_request);
+            if(!stopped) {
+                if(VolleyManager.isInitialized())
+                    VolleyManager.getVolleyQueue().add(json_request);
+                else if(currentContext != null) {
+                    VolleyManager.init(currentContext);
+                    VolleyManager.getVolleyQueue().add(json_request);
+                }
+                else
+                    isComplete = true;
+            }
+            else
+                isComplete = true;
         }
 
         private Response.Listener<JSONObject> successJsonResponse =  new Response.Listener<JSONObject>() {
@@ -378,13 +388,15 @@ public class RedMartService {
         private boolean isComplete;
         private boolean stopped;
         private Bitmap.CompressFormat imageQuality;
+        private Context currentContext;
 
-        public ImageLoaderTask(String image_url, ImageSetter image_setter, Bitmap.CompressFormat quality) {
+        public ImageLoaderTask(Context context, String image_url, ImageSetter image_setter, Bitmap.CompressFormat quality) {
             this.imageSetter = image_setter;
             this.imageUrl = image_url;
             this.isComplete = false;
             this.stopped = false;
             this.imageQuality = quality;
+            this.currentContext = context;
         }
 
         @Override
@@ -399,12 +411,22 @@ public class RedMartService {
                     else if(this.imageQuality == Bitmap.CompressFormat.PNG)
                         image_request = new ImageRequest(imageUrl, successImageResponse, IMAGE_MAX_SIZE, IMAGE_MAX_SIZE,
                                 ImageView.ScaleType.CENTER, Bitmap.Config.RGB_565, errorResponse);
-                    if(!stopped && image_request != null)
-                        VolleyManager.getVolleyQueue().add(image_request);
+                    if(!stopped && image_request != null) {
+                        if(VolleyManager.isInitialized())
+                            VolleyManager.getVolleyQueue().add(image_request);
+                        else if(currentContext != null) {
+                            VolleyManager.init(currentContext);
+                            VolleyManager.getVolleyQueue().add(image_request);
+                        }
+                        else
+                            isComplete = true;
+                    }
                     else
                         isComplete = true;
                 }
             }
+            else
+                isComplete = true;
         }
 
 
